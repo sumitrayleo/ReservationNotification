@@ -1,2 +1,0 @@
-CHANGED,C:\beacon_poc\ReservationNotification\app\build\intermediates\transforms\instantRun\debug\folders\4000\5\enhanced\com\android\tools\fd\runtime\AppPatchesLoaderImpl.class
-CHANGED,C:\beacon_poc\ReservationNotification\app\build\intermediates\transforms\instantRun\debug\folders\4000\5\enhanced\com\beaconpoc\ReservationNotification\estimote\BeaconNotificationsManager$1$override.class
