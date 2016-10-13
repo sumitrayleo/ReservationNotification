@@ -28,11 +28,13 @@ public class MyApplication extends Application {
         /**
          * TODO : Call WebService to get the uuidString
          */
+
+
         String uuidString = "b9407f30-f5f8-466e-aff9-25556b57fe6d:13531:47";
         beaconNotificationsManager.addNotification(
                 new BeaconID("B9407F30-F5F8-466E-AFF9-25556B57FE6D", 13531, 47),
-                "Hello Chandan.",
-                "Goodbye Chandan.");
+                "Hello Guest.",
+                "Goodbye Guest.");
         beaconNotificationsManager.startMonitoringAllBeacons(uuidString);
 
         beaconNotificationsEnabled = true;

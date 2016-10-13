@@ -49,7 +49,6 @@ public class BeaconNotificationsManager {
                 /**
                  * TODO : Call WebService Here to trigger backend check-in processes
                  */
-
                 String message = enterMessages.get(region.getIdentifier());
                 if (message != null) {
 

@@ -23,8 +23,7 @@ public class MainActivity extends AppCompatActivity {
         MyApplication app = (MyApplication) getApplication();
 
         if (!SystemRequirementsChecker.checkWithDefaultDialogs(this)) {
-            Log.e(TAG, "Can't scan for beacons, some pre-conditions were not met, verify pre-conditions at " +
-                    "http://estimote.github.io/Android-SDK/JavaDocs/com/estimote/sdk/SystemRequirementsChecker.html");
+            Log.e(TAG, "Can't scan for beacons, some pre-conditions were not met");
         } else if (!app.isBeaconNotificationsEnabled()) {
             Log.d(TAG, "Enabling beacon notifications");
             app.enableBeaconNotifications();
