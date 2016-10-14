@@ -8,6 +8,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.beaconpoc.ReservationNotification.MainActivity;
+import com.beaconpoc.ReservationNotification.webservice.ServiceUtils;
 import com.estimote.sdk.Beacon;
 import com.estimote.sdk.BeaconManager;
 import com.estimote.sdk.Region;
@@ -49,6 +50,9 @@ public class BeaconNotificationsManager {
                 /**
                  * TODO : Call WebService Here to trigger backend check-in processes
                  */
+
+                ServiceUtils.postPushNotificationData();
+
                 String message = enterMessages.get(region.getIdentifier());
                 if (message != null) {
 
