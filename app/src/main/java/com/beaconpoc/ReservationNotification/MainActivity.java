@@ -19,7 +19,10 @@ public class MainActivity extends Activity {
     Button pushNotification;
     Button retrieveDeviceInformation;
     ProgressBar progressBar;
-    ProgressBar progressBar1;
+    private static String serviceIdentifier;
+    private static String pushNotificationServiceIdentifier="pushNotificationService";
+    private static String retrieveDeviceInformationServiceIdentifier="retrieveDeviceInformationService";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,24 +34,22 @@ public class MainActivity extends Activity {
         progressBar.setVisibility(View.GONE);
 
 
-        pushNotification.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v) {
-                progressBar.setVisibility(View.VISIBLE);
-                new ExecuteTask().execute();
-            }
-        });
-
-
-
         retrieveDeviceInformation =(Button) findViewById(R.id.button1);
-        progressBar1=(ProgressBar) findViewById(R.id.progressBar1);
-        progressBar1.setVisibility(View.GONE);
+        progressBar=(ProgressBar) findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.GONE);
 
 
         retrieveDeviceInformation.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
-                progressBar1.setVisibility(View.VISIBLE);
-                new ExecuteTask().execute();
+                progressBar.setVisibility(View.VISIBLE);
+                new ExecuteTask().execute(retrieveDeviceInformationServiceIdentifier);
+            }
+        });
+
+        pushNotification.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v) {
+                progressBar.setVisibility(View.VISIBLE);
+                new ExecuteTask().execute(pushNotificationServiceIdentifier);
             }
         });
 
@@ -61,14 +62,23 @@ public class MainActivity extends Activity {
         @Override
         protected String doInBackground(String... params) {
 
-           // return ServiceUtils.postPushNotificationData();
-            return ServiceUtils.retrieveDeviceInformation();
+            String[] paramIdentifier=params;
+            serviceIdentifier=paramIdentifier[0];
+
+            if(pushNotificationServiceIdentifier.equalsIgnoreCase(serviceIdentifier)){
+                return ServiceUtils.postPushNotificationData();
+            }else if(retrieveDeviceInformationServiceIdentifier.equalsIgnoreCase(serviceIdentifier)){
+                return ServiceUtils.retrieveDeviceInformation();
+            }
+
+            return serviceIdentifier;
+
         }
 
         @SuppressLint("ShowToast")
         @Override
         protected void onPostExecute(String result) {
-            progressBar1.setVisibility(View.GONE);
+            progressBar.setVisibility(View.GONE);
             Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
             System.out.println("Webservice Response:::::"+result);
 
