@@ -19,6 +19,7 @@ public class ServiceUtils {
      * Post Login Service
      * @return
      */
+
     public String postLoginData() {
 
         String responseData="";
@@ -72,7 +73,7 @@ public class ServiceUtils {
         String responseData="";
         boolean result = false;
         HttpClient hc = new DefaultHttpClient();
-        HttpGet httpGet= new HttpGet("http://10.0.2.2:8080/booking-engine/api/booking/device/info?appName=EHI");
+        HttpGet httpGet= new HttpGet("http://booking-engine-layer.cloudhub.io/service/api/booking/device/info?appName=EHI");
 
         try {
 
@@ -110,7 +111,8 @@ public class ServiceUtils {
         HttpClient hc = new DefaultHttpClient();
         String message;
 
-        HttpPost httpPost = new HttpPost("http://10.0.2.2:8080/booking-engine/api/booking/notify/info");
+        //HttpPost httpPost = new HttpPost("http://10.0.2.2:8080/booking-engine/api/booking/notify/info");
+        HttpPost  httpPost = new HttpPost("http://booking-engine-layer.cloudhub.io/service/api/booking/notify/info");
         JSONObject object = new JSONObject();
 
         try {
@@ -119,7 +121,7 @@ public class ServiceUtils {
             object.put("deviceId", "1234");
             object.put("latitude", "65.7");
             object.put("longitude", "87.6");
-            object.put("identifier", "Car_Rental");
+            object.put("identifier", "Car Rental");
 
         } catch (Exception ex) {
             ex.printStackTrace();

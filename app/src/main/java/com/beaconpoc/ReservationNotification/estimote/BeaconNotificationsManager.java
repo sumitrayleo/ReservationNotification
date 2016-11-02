@@ -26,6 +26,8 @@ public class BeaconNotificationsManager {
     private List<Region> regionsToMonitor = new ArrayList<>();
     private HashMap<String, String> enterMessages = new HashMap<>();
     private HashMap<String, String> exitMessages = new HashMap<>();
+    private static int notificationEnterCount = 0;
+    private static int notificationExitCount = 0;
 
     private Context context;
 
@@ -42,22 +44,25 @@ public class BeaconNotificationsManager {
                 for (Beacon beacon: list) {
                     if (beacon!=null){
                         sb.append("Beacon-").append(i).append(" ");
-                        sb./*append(beacon.getProximityUUID()).*/append(":").append(beacon.getMajor()).append(":").append(beacon.getMinor());
+                        sb.append(":").append(beacon.getMajor()).append(":").append(beacon.getMinor());//append(beacon.getProximityUUID())
                         i++;
                     }
                 }
                 Log.d(TAG, "onEnteredRegion: " + region.getIdentifier());
-                /**
-                 * TODO : Call WebService Here to trigger backend check-in processes
-                 */
 
-                ServiceUtils.postPushNotificationData();
+                //TODO : Call Webservice to retrieve Location and show location in Welcome message
+                //ServiceUtils.retrieveDeviceInformation();
 
                 String message = enterMessages.get(region.getIdentifier());
                 if (message != null) {
-
-                    showNotification(message+sb.toString());
+                    if (notificationEnterCount < 1){
+                        showNotification(message+">"+notificationEnterCount+"-"+sb.toString());
+                    }
+                    notificationEnterCount++;
                 }
+
+                // WebService Here to trigger backend check-in processes
+                ServiceUtils.postPushNotificationData();
             }
 
             @Override
@@ -65,7 +70,10 @@ public class BeaconNotificationsManager {
                 Log.d(TAG, "onExitedRegion: " + region.getIdentifier());
                 String message = exitMessages.get(region.getIdentifier());
                 if (message != null) {
-                    showNotification(message);
+                    if (notificationExitCount==notificationEnterCount-1){
+                        showNotification(message+">"+notificationEnterCount+"-"+" "+region.getMajor()+":"+region.getMinor());
+                    }
+                    notificationExitCount++;
                 }
             }
         });
@@ -83,7 +91,6 @@ public class BeaconNotificationsManager {
             @Override
             public void onServiceReady() {
                 beaconManager.startMonitoring(new Region(uuidString,null,null,null));
-                //beaconManager.startMonitoring(new Region("b9407f30-f5f8-466e-aff9-25556b57fe6d:13531:47",null,null,null));
             }
         });
     }
