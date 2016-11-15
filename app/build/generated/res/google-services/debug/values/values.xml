@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="default_web_client_id" translatable="false">548668397481-cpuc73beetctuaut50hbgtk367aroiej.apps.googleusercontent.com</string>
+    <string name="firebase_database_url" translatable="false">https://reservationnotification-379f5.firebaseio.com</string>
+    <string name="gcm_defaultSenderId" translatable="false">548668397481</string>
+    <string name="google_api_key" translatable="false">AIzaSyCeqZh4Ju0wRDOYD8wv-zU3Z6aCIxFjdes</string>
+    <string name="google_app_id" translatable="false">1:548668397481:android:eff06810ac2807c8</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyCeqZh4Ju0wRDOYD8wv-zU3Z6aCIxFjdes</string>
+    <string name="google_storage_bucket" translatable="false">reservationnotification-379f5.appspot.com</string>
+</resources>
