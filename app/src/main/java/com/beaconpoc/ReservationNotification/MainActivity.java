@@ -10,7 +10,11 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.beaconpoc.ReservationNotification.webservice.ResponseCallBackHandler;
 import com.beaconpoc.ReservationNotification.webservice.ServiceUtils;
+import com.beaconpoc.ReservationNotification.webservice.model.DefaultResponse;
+import com.beaconpoc.ReservationNotification.webservice.model.EhiErrorInfo;
+import com.beaconpoc.ReservationNotification.webservice.model.PushNotificationRequest;
 import com.estimote.sdk.SystemRequirementsChecker;
 
 public class MainActivity extends Activity {
@@ -20,54 +24,73 @@ public class MainActivity extends Activity {
     Button retrieveDeviceInformation;
     ProgressBar progressBar;
     private static String serviceIdentifier;
-    private static String pushNotificationServiceIdentifier="pushNotificationService";
-    private static String retrieveDeviceInformationServiceIdentifier="retrieveDeviceInformationService";
-
+    private static String pushNotificationServiceIdentifier = "pushNotificationService";
+    private static String retrieveDeviceInformationServiceIdentifier = "retrieveDeviceInformationService";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        pushNotification =(Button) findViewById(R.id.button);
-        progressBar=(ProgressBar) findViewById(R.id.progressBar);
+        pushNotification = (Button) findViewById(R.id.button);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
         progressBar.setVisibility(View.GONE);
 
 
-        retrieveDeviceInformation =(Button) findViewById(R.id.button1);
-        progressBar=(ProgressBar) findViewById(R.id.progressBar);
+        retrieveDeviceInformation = (Button) findViewById(R.id.button1);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
         progressBar.setVisibility(View.GONE);
 
 
-        retrieveDeviceInformation.setOnClickListener(new View.OnClickListener(){
+        retrieveDeviceInformation.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 progressBar.setVisibility(View.VISIBLE);
                 new ExecuteTask().execute(retrieveDeviceInformationServiceIdentifier);
             }
         });
 
-        pushNotification.setOnClickListener(new View.OnClickListener(){
+        pushNotification.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 progressBar.setVisibility(View.VISIBLE);
-                new ExecuteTask().execute(pushNotificationServiceIdentifier);
+                sendPushNotificationRequest();
+                //new ExecuteTask().execute(pushNotificationServiceIdentifier);
             }
         });
 
     }
 
+    private void sendPushNotificationRequest() {
+        ResponseCallBackHandler<DefaultResponse> callBackHandler = new ResponseCallBackHandler<DefaultResponse>() {
+            @Override
+            public void success(DefaultResponse response) {
+                Log.d(TAG, "inside success callback");
+                Toast.makeText(getApplicationContext(), response.getMessage(), Toast.LENGTH_LONG).show();
+            }
 
-    class ExecuteTask extends AsyncTask<String, Integer, String>
-    {
+            @Override
+            public void failure(EhiErrorInfo errorInfo) {
+                progressBar.setVisibility(View.GONE);
+                Log.d(TAG, "inside failure callback" + errorInfo.getMessage());
+            }
+        };
+
+        PushNotificationRequest request = new PushNotificationRequest.Builder().
+                deviceId("1234").identifier("Airlines").latitude(80).longitude(90).memberId("1").token("12345").build();
+
+        ((MyApplication) getApplication()).getEhiNotificationServiceApi().submitPushNotificationRequest(request, callBackHandler);
+    }
+
+    class ExecuteTask extends AsyncTask<String, Integer, String> {
 
         @Override
         protected String doInBackground(String... params) {
 
-            String[] paramIdentifier=params;
-            serviceIdentifier=paramIdentifier[0];
+            String[] paramIdentifier = params;
+            serviceIdentifier = paramIdentifier[0];
 
-            if(pushNotificationServiceIdentifier.equalsIgnoreCase(serviceIdentifier)){
+            if (pushNotificationServiceIdentifier.equalsIgnoreCase(serviceIdentifier)) {
                 return ServiceUtils.postPushNotificationData();
-            }else if(retrieveDeviceInformationServiceIdentifier.equalsIgnoreCase(serviceIdentifier)){
+            } else if (retrieveDeviceInformationServiceIdentifier.equalsIgnoreCase(serviceIdentifier)) {
                 return ServiceUtils.retrieveDeviceInformation();
             }
 
@@ -80,12 +103,11 @@ public class MainActivity extends Activity {
         protected void onPostExecute(String result) {
             progressBar.setVisibility(View.GONE);
             Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
-            System.out.println("Webservice Response:::::"+result);
+            System.out.println("Webservice Response:::::" + result);
 
         }
 
     }
-
 
     @Override
     protected void onResume() {
