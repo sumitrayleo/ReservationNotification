@@ -3,4 +3,9 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="tab_bar_bg">#0D3828</color>
+    <color name="swatch_confirm_green_primary">#FFB4D88B</color>
+    <color name="white">#ffffffff</color>
+    <color name="clear">#00000000</color>
+
 </resources>

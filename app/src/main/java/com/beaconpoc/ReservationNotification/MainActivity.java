@@ -5,13 +5,23 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.beaconpoc.ReservationNotification.constant.ReservationNotificationConstants;
+import com.beaconpoc.ReservationNotification.fragments.BaseFragment;
+import com.beaconpoc.ReservationNotification.fragments.ReservationDetailsFragment;
 import com.beaconpoc.ReservationNotification.webservice.ResponseCallBackHandler;
 import com.beaconpoc.ReservationNotification.webservice.ServiceUtils;
 import com.beaconpoc.ReservationNotification.webservice.model.DefaultResponse;
@@ -19,7 +29,7 @@ import com.beaconpoc.ReservationNotification.webservice.model.EhiErrorInfo;
 import com.beaconpoc.ReservationNotification.webservice.model.PushNotificationRequest;
 import com.estimote.sdk.SystemRequirementsChecker;
 
-public class MainActivity extends Activity {
+public class MainActivity extends BaseFragmentActivity {
 
     private static final String TAG = "MainActivity";
     Button pushNotification;
@@ -28,59 +38,160 @@ public class MainActivity extends Activity {
     private static String serviceIdentifier;
     private static String pushNotificationServiceIdentifier="pushNotificationService";
     private static String retrieveDeviceInformationServiceIdentifier="retrieveDeviceInformationService";
+    ProgressDialog progressDialog;
 
+    ViewPager pager;
+    ProfileInfoPagerAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        pushNotification =(Button) findViewById(R.id.button);
-        progressBar=(ProgressBar) findViewById(R.id.progressBar);
-        progressBar.setVisibility(View.GONE);
+        android.support.design.widget.TabLayout tabs = (android.support.design.widget.TabLayout) findViewById(R.id.tabs);
+        tabs.setTabGravity(TabLayout.GRAVITY_FILL);
+        tabs.setTabMode(TabLayout.MODE_FIXED);
+        pager = (ViewPager) findViewById(R.id.pager);
+        adapter = new ProfileInfoPagerAdapter(getSupportFragmentManager());
+        pager.setAdapter(adapter);
+        tabs.setTabsFromPagerAdapter(adapter);
+        tabs.setupWithViewPager(pager);
+        pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
+        pager.setCurrentItem(0);
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setCancelable(false);
 
 
-        retrieveDeviceInformation =(Button) findViewById(R.id.button1);
-        progressBar=(ProgressBar) findViewById(R.id.progressBar);
-        progressBar.setVisibility(View.GONE);
-
-
-        retrieveDeviceInformation.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v) {
-                progressBar.setVisibility(View.VISIBLE);
-                new ExecuteTask().execute(retrieveDeviceInformationServiceIdentifier);
-            }
-        });
-
-        pushNotification.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v) {
+//        pushNotification =(Button) findViewById(R.id.button);
+//        progressBar=(ProgressBar) findViewById(R.id.progressBar);
+//        progressBar.setVisibility(View.GONE);
+//
+//
+//        retrieveDeviceInformation =(Button) findViewById(R.id.button1);
+//        progressBar=(ProgressBar) findViewById(R.id.progressBar);
+//        progressBar.setVisibility(View.GONE);
+//
+//
+//        retrieveDeviceInformation.setOnClickListener(new View.OnClickListener(){
+//            public void onClick(View v) {
 //                progressBar.setVisibility(View.VISIBLE);
-//                sendPushNotificationRequest();
-                new ExecuteTask().execute(pushNotificationServiceIdentifier);
-            }
-        });
+//                new ExecuteTask().execute(retrieveDeviceInformationServiceIdentifier);
+//            }
+//        });
+//
+//        pushNotification.setOnClickListener(new View.OnClickListener(){
+//            public void onClick(View v) {
+////                progressBar.setVisibility(View.VISIBLE);
+////                sendPushNotificationRequest();
+//                new ExecuteTask().execute(pushNotificationServiceIdentifier);
+//            }
+//        });
 
     }
 
+    /**
+     * Custom adapter to help manage the Tabs & Fragments on the profile screen
+     */
+    public class ProfileInfoPagerAdapter extends FragmentPagerAdapter {
+        private BaseFragment[] fragmentRef;
+        private String[] titles;
+
+        public ProfileInfoPagerAdapter(FragmentManager fm) {
+            super(fm);
+            titles = new String[]{
+                    getString(R.string.details),
+                    getString(R.string.offers),
+                    getString(R.string.directions)
+            };
+            fragmentRef = new BaseFragment[titles.length];
+        }
+        @Override
+        public void destroyItem (ViewGroup container, int position, Object object) {
+            super.destroyItem(container, position, object);
+            if(fragmentRef != null && position >= 0 && position < fragmentRef.length) {
+                fragmentRef[position] = null;
+            }
+        }
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            Fragment fragment = (Fragment)super.instantiateItem(container, position);
+            if(fragmentRef != null && position >=0 && position < fragmentRef.length) {
+                fragmentRef[position] = (BaseFragment) fragment;
+            }
+            return fragment;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return titles[position];
+        }
+
+        @Override
+        public int getCount() {
+            return titles.length;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            Fragment ret = null;
+            switch (position) {
+                case 0:
+                    ret = new ReservationDetailsFragment();
+                    break;
+                case 1:
+                    ret = new ReservationDetailsFragment();
+                    break;
+                case 2:
+                    ret = new ReservationDetailsFragment();
+                    break;
+            }
+            return ret;
+        }
+
+        /**
+         * This is inteded to allow the activity to "push" updates to the fragments, the Activity should
+         * *NOT* store or persist an instance of the fragments as the FragmentPagerAdapter tends to do
+         * it's own memory management (IE: a persisted fragment might be an old one, or already "freed")
+         * @param index - the index of the fragment to get
+         * @return the fragment or Null if not allocated/Found
+         */
+        public @Nullable BaseFragment getFragmentRef(int index) {
+            if(fragmentRef == null || fragmentRef.length <= index || index < 0) {
+                return null;
+            }
+            return fragmentRef[index];
+        }
+    }
+
+    public void sendpushnotification(View view){
+        sendPushNotificationRequest();
+    }
+
+
     private void sendPushNotificationRequest() {
+
+        progressDialog.setMessage("Requesting Push Notification...");
+        progressDialog.show();
+
         ResponseCallBackHandler<DefaultResponse> callBackHandler = new ResponseCallBackHandler<DefaultResponse>() {
             @Override
             public void success(DefaultResponse response) {
                 Log.d(TAG, "inside success callback");
-                progressBar.setVisibility(View.GONE);
+                progressDialog.dismiss();
                 Toast.makeText(getApplicationContext(), response.getMessage(), Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void failure(EhiErrorInfo errorInfo) {
-                progressBar.setVisibility(View.GONE);
+                progressDialog.dismiss();
                 Log.d(TAG, "inside failure callback" + errorInfo.getMessage());
             }
         };
 
         PushNotificationRequest request = new PushNotificationRequest.Builder()
                 .deviceId("1234")
-                .identifier("Airlines")
+                .identifier("Car Rental")
                 .latitude(80)
                 .longitude(90)
                 .memberId("1")

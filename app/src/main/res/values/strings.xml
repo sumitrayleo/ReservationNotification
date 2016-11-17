@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">ReservationNotification</string>
+    <string name="details">Details</string>
+    <string name="offers">Offers</string>
+    <string name="directions">Directions</string>
+    <string name="app_heading">Reservation Notification</string>
 </resources>

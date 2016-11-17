@@ -8,4 +8,17 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="tab_layout">
+        <item name="android:background">@color/tab_bar_bg</item>
+        <item name="tabIndicatorColor">@color/swatch_confirm_green_primary</item>
+        <item name="tabTextColor">@color/swatch_confirm_green_primary</item>
+        <item name="tabSelectedTextColor">@color/white</item>
+    </style>
+
+    <style name="toolbarTitleAppearance" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+
 </resources>
