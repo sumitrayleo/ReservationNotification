@@ -16,5 +16,5 @@ public class EhiNotificationConstants {
     public static final long HTTP_CACHE_SIZE_IN_BYTES = 1024 * 1024 * 10;
     public static final int HTTP_CONNECTION_TIMEOUT = 125;
 
-    public static final String BASE_URL = "http://booking-engine-layer.cloudhub.io/service/";
+    public static final String BASE_URL = "http://booking-layer.cloudhub.io/service/";
 }

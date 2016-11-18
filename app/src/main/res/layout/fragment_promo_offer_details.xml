@@ -1,0 +1,35 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/activity_horizontal_margin"
+    tools:context="com.beaconpoc.ReservationNotification.fragments.PromoOfferDetailsFragment">
+
+    <ImageView
+        android:id="@+id/mapview"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:src="@drawable/mapimage" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:text="landMarkInstructions"
+        android:textAllCaps="true"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/txtview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Vehicle located at the Whole Foods Supermarket parking lot in Capitol Hill - 900 E. 11th Ave, at the corner of 11th Ave and Emerson.  The CarShare car is located on the west side of the building"
+        android:textColor="@android:color/black"
+        android:textSize="16sp" />
+
+</LinearLayout>

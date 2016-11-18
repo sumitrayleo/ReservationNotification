@@ -1,18 +1,23 @@
 package com.beaconpoc.ReservationNotification;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -21,6 +26,7 @@ import android.widget.Toast;
 
 import com.beaconpoc.ReservationNotification.constant.ReservationNotificationConstants;
 import com.beaconpoc.ReservationNotification.fragments.BaseFragment;
+import com.beaconpoc.ReservationNotification.fragments.OfferListFragment;
 import com.beaconpoc.ReservationNotification.fragments.ReservationDetailsFragment;
 import com.beaconpoc.ReservationNotification.webservice.ResponseCallBackHandler;
 import com.beaconpoc.ReservationNotification.webservice.ServiceUtils;
@@ -29,15 +35,15 @@ import com.beaconpoc.ReservationNotification.webservice.model.EhiErrorInfo;
 import com.beaconpoc.ReservationNotification.webservice.model.PushNotificationRequest;
 import com.estimote.sdk.SystemRequirementsChecker;
 
-public class MainActivity extends BaseFragmentActivity {
+public class MainActivity extends AppCompatActivity  {
 
     private static final String TAG = "MainActivity";
     Button pushNotification;
     Button retrieveDeviceInformation;
     ProgressBar progressBar;
     private static String serviceIdentifier;
-    private static String pushNotificationServiceIdentifier="pushNotificationService";
-    private static String retrieveDeviceInformationServiceIdentifier="retrieveDeviceInformationService";
+    private static String pushNotificationServiceIdentifier = "pushNotificationService";
+    private static String retrieveDeviceInformationServiceIdentifier = "retrieveDeviceInformationService";
     ProgressDialog progressDialog;
 
     ViewPager pager;
@@ -61,6 +67,10 @@ public class MainActivity extends BaseFragmentActivity {
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
 
 
 //        pushNotification =(Button) findViewById(R.id.button);
@@ -90,6 +100,26 @@ public class MainActivity extends BaseFragmentActivity {
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_direction, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.direction:
+                Intent launchPromoOffer = new Intent(MainActivity.this, PromoOfferDetailsActivity.class);
+                startActivity(launchPromoOffer);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     /**
      * Custom adapter to help manage the Tabs & Fragments on the profile screen
      */
@@ -101,22 +131,23 @@ public class MainActivity extends BaseFragmentActivity {
             super(fm);
             titles = new String[]{
                     getString(R.string.details),
-                    getString(R.string.offers),
-                    getString(R.string.directions)
+                    getString(R.string.offers)
             };
             fragmentRef = new BaseFragment[titles.length];
         }
+
         @Override
-        public void destroyItem (ViewGroup container, int position, Object object) {
+        public void destroyItem(ViewGroup container, int position, Object object) {
             super.destroyItem(container, position, object);
-            if(fragmentRef != null && position >= 0 && position < fragmentRef.length) {
+            if (fragmentRef != null && position >= 0 && position < fragmentRef.length) {
                 fragmentRef[position] = null;
             }
         }
+
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-            Fragment fragment = (Fragment)super.instantiateItem(container, position);
-            if(fragmentRef != null && position >=0 && position < fragmentRef.length) {
+            Fragment fragment = (Fragment) super.instantiateItem(container, position);
+            if (fragmentRef != null && position >= 0 && position < fragmentRef.length) {
                 fragmentRef[position] = (BaseFragment) fragment;
             }
             return fragment;
@@ -140,31 +171,23 @@ public class MainActivity extends BaseFragmentActivity {
                     ret = new ReservationDetailsFragment();
                     break;
                 case 1:
-                    ret = new ReservationDetailsFragment();
-                    break;
-                case 2:
-                    ret = new ReservationDetailsFragment();
+                    ret = new OfferListFragment();
                     break;
             }
             return ret;
         }
 
-        /**
-         * This is inteded to allow the activity to "push" updates to the fragments, the Activity should
-         * *NOT* store or persist an instance of the fragments as the FragmentPagerAdapter tends to do
-         * it's own memory management (IE: a persisted fragment might be an old one, or already "freed")
-         * @param index - the index of the fragment to get
-         * @return the fragment or Null if not allocated/Found
-         */
-        public @Nullable BaseFragment getFragmentRef(int index) {
-            if(fragmentRef == null || fragmentRef.length <= index || index < 0) {
+        public
+        @Nullable
+        BaseFragment getFragmentRef(int index) {
+            if (fragmentRef == null || fragmentRef.length <= index || index < 0) {
                 return null;
             }
             return fragmentRef[index];
         }
     }
 
-    public void sendpushnotification(View view){
+    public void sendpushnotification(View view) {
         sendPushNotificationRequest();
     }
 
@@ -201,8 +224,7 @@ public class MainActivity extends BaseFragmentActivity {
     }
 
 
-    class ExecuteTask extends AsyncTask<String, Integer, String>
-    {
+    class ExecuteTask extends AsyncTask<String, Integer, String> {
         ProgressDialog pDialog;
 
         @Override
@@ -218,12 +240,12 @@ public class MainActivity extends BaseFragmentActivity {
         @Override
         protected String doInBackground(String... params) {
 
-            String[] paramIdentifier=params;
-            serviceIdentifier=paramIdentifier[0];
+            String[] paramIdentifier = params;
+            serviceIdentifier = paramIdentifier[0];
 
-            if(pushNotificationServiceIdentifier.equalsIgnoreCase(serviceIdentifier)){
+            if (pushNotificationServiceIdentifier.equalsIgnoreCase(serviceIdentifier)) {
                 return ServiceUtils.postPushNotificationData(ReservationNotificationConstants.FCM_TOKEN);
-            }else if(retrieveDeviceInformationServiceIdentifier.equalsIgnoreCase(serviceIdentifier)){
+            } else if (retrieveDeviceInformationServiceIdentifier.equalsIgnoreCase(serviceIdentifier)) {
                 return ServiceUtils.retrieveDeviceInformation();
             }
 
@@ -237,7 +259,7 @@ public class MainActivity extends BaseFragmentActivity {
             progressBar.setVisibility(View.GONE);
             pDialog.dismiss();
             Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
-            System.out.println("Webservice Response:::::"+result);
+            System.out.println("Webservice Response:::::" + result);
 
         }
 

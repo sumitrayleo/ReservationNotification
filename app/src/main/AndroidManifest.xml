@@ -15,27 +15,29 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name="com.beaconpoc.ReservationNotification.MainActivity">
+        <activity android:name="com.beaconpoc.ReservationNotification.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service
-            android:name=".services.MyFirebaseInstanceIdService">
+
+        <activity android:name="com.beaconpoc.ReservationNotification.MainActivity" />
+
+        <service android:name=".services.MyFirebaseInstanceIdService">
             <intent-filter>
-                <action
-                    android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
         <service
             android:name=".services.MyFirebaseMessagingService"
             android:exported="false">
             <intent-filter>
-                <action
-                    android:name="com.google.firebase.MESSAGING_EVENT" />
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
+        <activity android:name=".PromoOfferDetailsActivity" />
     </application>
 
 </manifest>

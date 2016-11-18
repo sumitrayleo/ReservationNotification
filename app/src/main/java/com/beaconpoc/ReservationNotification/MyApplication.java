@@ -10,6 +10,7 @@ import com.beaconpoc.ReservationNotification.webservice.EhiNotificationIntercept
 import com.beaconpoc.ReservationNotification.webservice.EhiNotificationRetrofitApi;
 import com.beaconpoc.ReservationNotification.webservice.EhiNotificationServiceApi;
 import com.beaconpoc.ReservationNotification.webservice.EhiNotificationServiceApiImpl;
+import com.beaconpoc.ReservationNotification.webservice.model.PushNotificationFcmModel;
 import com.estimote.sdk.EstimoteSDK;
 import com.google.firebase.iid.FirebaseInstanceId;
 
@@ -26,6 +27,7 @@ public class MyApplication extends Application {
 
     private boolean beaconNotificationsEnabled = false;
     private EhiNotificationServiceApi ehiNotificationServiceApi;
+    private PushNotificationFcmModel pushNotificationFcmModel;
 
     @Override
     public void onCreate() {
@@ -65,6 +67,14 @@ public class MyApplication extends Application {
 
     public EhiNotificationServiceApi getEhiNotificationServiceApi() {
         return ehiNotificationServiceApi;
+    }
+
+    public PushNotificationFcmModel getPushNotificationFcmModel() {
+        return pushNotificationFcmModel;
+    }
+
+    public void setPushNotificationFcmModel(PushNotificationFcmModel pushNotificationFcmModel) {
+        this.pushNotificationFcmModel = pushNotificationFcmModel;
     }
 
     private void createRetrofitService() {
