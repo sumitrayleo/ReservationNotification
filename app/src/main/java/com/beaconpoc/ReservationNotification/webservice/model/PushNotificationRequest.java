@@ -69,12 +69,12 @@ public class PushNotificationRequest {
             return this;
         }
 
-        public Builder latitude(long latitude) {
+        public Builder latitude(double latitude) {
             this.latitude = latitude;
             return this;
         }
 
-        public Builder longitude(long longitude) {
+        public Builder longitude(double longitude) {
             this.longitude = longitude;
             return this;
         }

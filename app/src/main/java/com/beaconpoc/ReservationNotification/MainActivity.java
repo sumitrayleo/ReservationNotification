@@ -3,6 +3,7 @@ package com.beaconpoc.ReservationNotification;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -28,6 +29,7 @@ import com.beaconpoc.ReservationNotification.constant.ReservationNotificationCon
 import com.beaconpoc.ReservationNotification.fragments.BaseFragment;
 import com.beaconpoc.ReservationNotification.fragments.OfferListFragment;
 import com.beaconpoc.ReservationNotification.fragments.ReservationDetailsFragment;
+import com.beaconpoc.ReservationNotification.utils.LocationUpdateUtils;
 import com.beaconpoc.ReservationNotification.webservice.ResponseCallBackHandler;
 import com.beaconpoc.ReservationNotification.webservice.ServiceUtils;
 import com.beaconpoc.ReservationNotification.webservice.model.DefaultResponse;
@@ -35,7 +37,7 @@ import com.beaconpoc.ReservationNotification.webservice.model.EhiErrorInfo;
 import com.beaconpoc.ReservationNotification.webservice.model.PushNotificationRequest;
 import com.estimote.sdk.SystemRequirementsChecker;
 
-public class MainActivity extends AppCompatActivity  {
+public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     Button pushNotification;
@@ -212,11 +214,13 @@ public class MainActivity extends AppCompatActivity  {
             }
         };
 
+        Location location = LocationUpdateUtils.getInstance(this).getLocation();
+
         PushNotificationRequest request = new PushNotificationRequest.Builder()
                 .deviceId("1234")
                 .identifier("Car Rental")
-                .latitude(80)
-                .longitude(90)
+                .latitude(location.getLatitude())
+                .longitude(location.getLongitude())
                 .memberId("1")
                 .token(ReservationNotificationConstants.FCM_TOKEN).build();
 
