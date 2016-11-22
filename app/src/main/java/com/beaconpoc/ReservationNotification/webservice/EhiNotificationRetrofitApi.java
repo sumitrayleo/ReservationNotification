@@ -22,7 +22,7 @@ public interface EhiNotificationRetrofitApi {
     @POST("info/booking/device/registerDevice ")
     Call<DefaultResponse> submitRegisterDeviceRequest(@Body DeviceRegisterRequest deviceRegisterRequest);
 
-    @GET("info/booking/device/retrieveDeviceById")
+    @GET("api/booking/device/info")
     Call<DeviceDetailsResponse> getDeviceInfoById(@Query("uuid") String uuid, @Query("region") String region, @Query("assetId") String assetId);
 
 }

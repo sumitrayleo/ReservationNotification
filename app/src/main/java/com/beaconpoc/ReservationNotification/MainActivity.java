@@ -12,7 +12,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -33,6 +32,7 @@ import com.beaconpoc.ReservationNotification.utils.LocationUpdateUtils;
 import com.beaconpoc.ReservationNotification.webservice.ResponseCallBackHandler;
 import com.beaconpoc.ReservationNotification.webservice.ServiceUtils;
 import com.beaconpoc.ReservationNotification.webservice.model.DefaultResponse;
+import com.beaconpoc.ReservationNotification.webservice.model.DeviceDetailsResponse;
 import com.beaconpoc.ReservationNotification.webservice.model.EhiErrorInfo;
 import com.beaconpoc.ReservationNotification.webservice.model.PushNotificationRequest;
 import com.estimote.sdk.SystemRequirementsChecker;
@@ -46,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
     private static String serviceIdentifier;
     private static String pushNotificationServiceIdentifier = "pushNotificationService";
     private static String retrieveDeviceInformationServiceIdentifier = "retrieveDeviceInformationService";
+    private static String DEVICE_INFO_EXTRA = "device_details";
+    private DeviceDetailsResponse deviceDetailsResponse;
     ProgressDialog progressDialog;
 
     ViewPager pager;
@@ -74,32 +76,11 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(getResources().getColor(R.color.white));
 
+        if (getIntent() != null) {
+            deviceDetailsResponse = getIntent().getParcelableExtra(DEVICE_INFO_EXTRA);
+        }
 
-//        pushNotification =(Button) findViewById(R.id.button);
-//        progressBar=(ProgressBar) findViewById(R.id.progressBar);
-//        progressBar.setVisibility(View.GONE);
-//
-//
-//        retrieveDeviceInformation =(Button) findViewById(R.id.button1);
-//        progressBar=(ProgressBar) findViewById(R.id.progressBar);
-//        progressBar.setVisibility(View.GONE);
-//
-//
-//        retrieveDeviceInformation.setOnClickListener(new View.OnClickListener(){
-//            public void onClick(View v) {
-//                progressBar.setVisibility(View.VISIBLE);
-//                new ExecuteTask().execute(retrieveDeviceInformationServiceIdentifier);
-//            }
-//        });
-//
-//        pushNotification.setOnClickListener(new View.OnClickListener(){
-//            public void onClick(View v) {
-////                progressBar.setVisibility(View.VISIBLE);
-////                sendPushNotificationRequest();
-//                new ExecuteTask().execute(pushNotificationServiceIdentifier);
-//            }
-//        });
-
+        sendPushNotificationRequest();
     }
 
     @Override
@@ -189,11 +170,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void sendpushnotification(View view) {
-        sendPushNotificationRequest();
-    }
-
-
     private void sendPushNotificationRequest() {
 
         progressDialog.setMessage("Requesting Push Notification...");
@@ -269,7 +245,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -282,5 +257,12 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, "Enabling beacon notifications");
             app.enableBeaconNotifications();
         }
+    }
+
+    public static Intent intentMainActivity(SplashActivity activity, DeviceDetailsResponse deviceDetailsResponse) {
+        Intent intent = new Intent(activity, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent.putExtra(DEVICE_INFO_EXTRA, deviceDetailsResponse);
+        return intent;
     }
 }

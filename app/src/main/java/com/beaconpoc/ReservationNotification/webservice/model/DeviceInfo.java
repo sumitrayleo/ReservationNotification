@@ -10,8 +10,8 @@ public class DeviceInfo implements Parcelable {
     private String locationDetails;
     private String message;
     private String assetId;
-    private long longitude;
-    private long latitude;
+    private double longitude;
+    private double latitude;
     private String uuid;
     private String region;
 
@@ -23,8 +23,8 @@ public class DeviceInfo implements Parcelable {
         locationDetails = in.readString();
         message = in.readString();
         assetId = in.readString();
-        longitude = in.readLong();
-        latitude = in.readLong();
+        longitude = in.readDouble();
+        latitude = in.readDouble();
         uuid = in.readString();
         region = in.readString();
     }
@@ -53,19 +53,19 @@ public class DeviceInfo implements Parcelable {
         this.assetId = assetId;
     }
 
-    public long getLongitude() {
+    public double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(long longitude) {
+    public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
 
-    public long getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(long latitude) {
+    public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
 
@@ -107,8 +107,8 @@ public class DeviceInfo implements Parcelable {
         dest.writeString(locationDetails);
         dest.writeString(message);
         dest.writeString(assetId);
-        dest.writeLong(longitude);
-        dest.writeLong(latitude);
+        dest.writeDouble(longitude);
+        dest.writeDouble(latitude);
         dest.writeString(uuid);
         dest.writeString(region);
     }
