@@ -1,15 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView
+        android:id="@+id/welcome_msg"
+        android:text=""
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_with_shadow"
+        android:gravity="center"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        style="@style/sub_heading"
+        android:padding="@dimen/margin_medium"
+        android:layout_centerInParent="true"/>
+
     <ScrollView
+        android:id="@+id/ParentScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/bg_with_shadow"
         android:layout_margin="@dimen/activity_horizontal_margin"
-        android:scrollbars="none">
+        android:scrollbars="none"
+        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -26,8 +40,7 @@
                 android:paddingTop="@dimen/margin_medium"
                 android:paddingBottom="@dimen/margin_medium"/>
 
-            <View
-                style="@style/separator"/>
+            <View style="@style/separator"/>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -61,7 +74,7 @@
                 android:layout_height="wrap_content"
                 style="@style/content_style"
                 android:gravity="center"
-                android:text="Reservation Number - 93961"
+                android:text=""
                 android:layout_alignParentBottom="true"
                 android:paddingTop="@dimen/activity_horizontal_margin"/>
 
@@ -102,4 +115,4 @@
 
         </LinearLayout>
     </ScrollView>
-</LinearLayout>
+</RelativeLayout>

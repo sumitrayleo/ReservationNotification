@@ -44,4 +44,9 @@ public class DeviceDetailsResponse implements Parcelable {
         dest.writeString(message);
         dest.writeParcelable(deviceInfo, flags);
     }
+
+    public DeviceInfo getDeviceInfo() {
+        return deviceInfo;
+    }
+
 }

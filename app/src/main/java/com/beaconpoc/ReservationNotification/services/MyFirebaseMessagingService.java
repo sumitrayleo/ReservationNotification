@@ -50,10 +50,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     }
 
-    private void sendNotification(RemoteMessage remoteMessage) {
+    private void sendNotification(PushNotificationFcmModel pushNotificationFcmModel) {
 
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("FCM-Flow", true);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
 
@@ -62,10 +63,16 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                         /*.setLargeIcon(image)*/
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("ABC - ECAR")
-                .setContentText("20% Application Discount")
+                .setContentTitle(pushNotificationFcmModel.getReservations().get(0).getCompanyName()
+                        + " - "
+                        + pushNotificationFcmModel.getReservations().get(0).getPromoOffers().getRules().get(0).getCategory())
+                .setContentText(pushNotificationFcmModel.getReservations().get(0).getPromoOffers().getRules().get(0).getDiscount()
+                        + " "
+                        + pushNotificationFcmModel.getReservations().get(0).getPromoOffers().getRules().get(0).getDiscountType()
+                        + " "
+                        +pushNotificationFcmModel.getReservations().get(0).getPromoOffers().getRules().get(0).getDescription())
                         /*.setStyle(new NotificationCompat.BigPictureStyle().bigPicture(image))Notification with Image*/
-                .setAutoCancel(false)
+                .setAutoCancel(true)
                 .setSound(defaultSoundUri)
                 .setContentIntent(pendingIntent);
 
@@ -110,14 +117,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             }.getType();
             pushNotificationFcmModel.setReservations((List<ReservationModel>) gson.fromJson(reservations, reservationsListType));
             ((MyApplication) getApplication()).setPushNotificationFcmModel(pushNotificationFcmModel);
-            sendNotification(remoteMessage);
+            sendNotification(pushNotificationFcmModel);
 
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
 
 }
 

@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private static String DEVICE_INFO_EXTRA = "device_details";
     private DeviceDetailsResponse deviceDetailsResponse;
     ProgressDialog progressDialog;
+    private boolean isFCMFlow;
 
     ViewPager pager;
     ProfileInfoPagerAdapter adapter;
@@ -75,12 +77,16 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(getResources().getColor(R.color.white));
+        ActionBar actionBar = getSupportActionBar();
 
         if (getIntent() != null) {
             deviceDetailsResponse = getIntent().getParcelableExtra(DEVICE_INFO_EXTRA);
+            isFCMFlow = getIntent().getBooleanExtra("FCM-Flow", false);
         }
 
-        sendPushNotificationRequest();
+        if (!isFCMFlow) {
+            sendPushNotificationRequest();
+        }
     }
 
     @Override
@@ -151,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
             Fragment ret = null;
             switch (position) {
                 case 0:
-                    ret = new ReservationDetailsFragment();
+                    ret = ReservationDetailsFragment.newInstance(deviceDetailsResponse);
                     break;
                 case 1:
                     ret = new OfferListFragment();

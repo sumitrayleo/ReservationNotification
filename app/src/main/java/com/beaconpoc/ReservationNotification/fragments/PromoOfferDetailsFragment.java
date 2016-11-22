@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.beaconpoc.ReservationNotification.R;
 import com.beaconpoc.ReservationNotification.webservice.model.DriveDistance;
@@ -37,7 +38,11 @@ public class PromoOfferDetailsFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_promo_offer_details, container, false);
+        View inflateView = inflater.inflate(R.layout.fragment_promo_offer_details, container, false);
+        ((TextView) inflateView.findViewById(R.id.landMarkInstructions))
+                .setText(driveDistance.getLandMarkInstructions());
+
+        return inflateView;
     }
 
 }

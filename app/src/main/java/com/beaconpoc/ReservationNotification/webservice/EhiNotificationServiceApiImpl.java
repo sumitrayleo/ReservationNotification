@@ -83,7 +83,7 @@ public class EhiNotificationServiceApiImpl implements EhiNotificationServiceApi 
             private void buildErrorAndSendCallback(final Call<T> call, final Throwable t) {
                 EhiErrorInfo errorInfo = new EhiErrorInfo(t != null ? t.getMessage() : "No Throwable", call.request().url().toString());
                 callback.failure(errorInfo);
-                //dispatchRetry(retryCall);
+                dispatchRetry(retryCall);
             }
         };
     }

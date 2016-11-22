@@ -9,9 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import com.beaconpoc.ReservationNotification.MyApplication;
 import com.beaconpoc.ReservationNotification.OfferListAdapter;
 import com.beaconpoc.ReservationNotification.R;
 import com.beaconpoc.ReservationNotification.model.PromoItem;
+import com.beaconpoc.ReservationNotification.webservice.model.PushNotificationFcmModel;
+import com.beaconpoc.ReservationNotification.webservice.model.RulesModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,12 +37,21 @@ public class OfferListFragment extends BaseFragment {
         mRecyclerView = (RecyclerView) inflateView.findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         promoList = new ArrayList<>();
-        for(int i = 0; i < 2; i++){
-            PromoItem item = new PromoItem();
-            item.setTitle("ECar with 20% Discount");
-            item.setDescription("Application Discount");
-            item.setPromocode("Promo Code : 1");
-            promoList.add(item);
+        if(((MyApplication)getActivity().getApplication()).getPushNotificationFcmModel() != null) {
+            PushNotificationFcmModel pushNotificationFcmModel = ((MyApplication) getActivity().getApplication()).getPushNotificationFcmModel();
+            List<RulesModel> rulesModels = pushNotificationFcmModel.getReservations().get(0).getPromoOffers().getRules();
+            for (int i = 0; i < rulesModels.size(); i++) {
+                PromoItem item = new PromoItem();
+                item.setTitle(rulesModels.get(i).getCategory()
+                        + " @"
+                        + rulesModels.get(i).getDiscount()
+                        + " "
+                        + rulesModels.get(i).getDiscountType()
+                        + " discount");
+                item.setDescription(rulesModels.get(i).getDescription());
+                item.setPromocode("Promo Code : " + rulesModels.get(i).getPromoCodeId());
+                promoList.add(item);
+            }
         }
         adapter = new OfferListAdapter(getContext(), promoList);
         mRecyclerView.setAdapter(adapter);

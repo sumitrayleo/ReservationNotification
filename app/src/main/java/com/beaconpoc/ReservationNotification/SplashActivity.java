@@ -24,45 +24,53 @@ public class SplashActivity extends Activity {
     private static final String TAG = "splash_activity";
     private static final int PERMISSION_REQUEST_CODE = 5;
     ProgressDialog progressDialog;
+    private DeviceDetailsResponse deviceDetailsResponse;
+    private boolean isLocationFetched;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         progressDialog = new ProgressDialog(this, ProgressDialog.STYLE_SPINNER);
+        progressDialog.setMessage("Fetching data");
         progressDialog.setCancelable(false);
 
         retrieveDeviceId("98765342", "9860", "5678");
         checkPermissionForLocationUpdate();
     }
 
-    @TargetApi(Build.VERSION_CODES.M)
+    @TargetApi(23)
     private void checkPermissionForLocationUpdate() {
         String[] permission = new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION};
+
         if (PermissionUtils.isLocationPermitted(this)) {
-            LocationUpdateUtils.getInstance(this);
+            LocationUpdateUtils locationUpdateUtils = LocationUpdateUtils.getInstance(this);
+            locationUpdateUtils.setOnLocationFetchedListener(new LocationFetchedListener());
         } else {
             requestPermissions(permission, PERMISSION_REQUEST_CODE);
         }
+
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode != PERMISSION_REQUEST_CODE) {
-            return;
-        }
-
-        for (final int result : grantResults) {
-            if (result == PackageManager.PERMISSION_GRANTED) {
-                LocationUpdateUtils.getInstance(this);
+        switch (requestCode) {
+            case PERMISSION_REQUEST_CODE: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    LocationUpdateUtils locationUpdateUtils = LocationUpdateUtils.getInstance(this);
+                    locationUpdateUtils.setOnLocationFetchedListener(new LocationFetchedListener());
+                } else {
+                    return;
+                }
             }
         }
     }
 
-    private void launchHomeScreen(@NonNull DeviceDetailsResponse response) {
-        if (response != null) {
-            startActivity(MainActivity.intentMainActivity(this, response));
+    private void launchHomeScreen() {
+        if (deviceDetailsResponse != null) {
+            startActivity(MainActivity.intentMainActivity(this, deviceDetailsResponse));
         }
         finish();
     }
@@ -74,8 +82,11 @@ public class SplashActivity extends Activity {
             @Override
             public void success(DeviceDetailsResponse response) {
                 Log.d(TAG, "inside success callback");
-                progressDialog.dismiss();
-                launchHomeScreen(response);
+                deviceDetailsResponse = response;
+                if (isLocationFetched) {
+                    progressDialog.dismiss();
+                    launchHomeScreen();
+                }
             }
 
             @Override
@@ -89,5 +100,21 @@ public class SplashActivity extends Activity {
         ((MyApplication) getApplication()).getEhiNotificationServiceApi().
                 getDeviceInfoById(uuid, region, assetId, callBackHandler);
 
+    }
+
+    private class LocationFetchedListener implements LocationUpdateUtils.OnLocationFetchedListener {
+
+        @Override
+        public void onLocationFetched() {
+            Log.d(TAG, "inside onLocationFetched");
+            isLocationFetched = true;
+            if (deviceDetailsResponse != null) {
+                Log.d(TAG, "inside if onLocationFetched");
+                progressDialog.dismiss();
+                launchHomeScreen();
+            }
+            LocationUpdateUtils.getInstance(SplashActivity.this).removeListener();
+
+        }
     }
 }

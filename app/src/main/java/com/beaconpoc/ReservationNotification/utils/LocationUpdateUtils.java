@@ -20,6 +20,7 @@ public class LocationUpdateUtils {
     private LocationManager locationManager;
     private LocationListener privateLocationListener;
     private Location location;
+    private OnLocationFetchedListener onLocationFetchedListener;
 
     private LocationUpdateUtils(Context context) {
         this.context = context;
@@ -37,6 +38,14 @@ public class LocationUpdateUtils {
         return location;
     }
 
+    public void setOnLocationFetchedListener(OnLocationFetchedListener onLocationFetchedListener){
+        this.onLocationFetchedListener = onLocationFetchedListener;
+    }
+
+    public void removeListener(){
+        this.onLocationFetchedListener = null;
+    }
+
     public void initLocationUpdatesSetup() {
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         privateLocationListener = new LocationListener() {
@@ -44,6 +53,9 @@ public class LocationUpdateUtils {
             public void onLocationChanged(Location location) {
                 Log.d(TAG, "inside onLocationChanged");
                 LocationUpdateUtils.this.location = location;
+                if(onLocationFetchedListener != null){
+                    onLocationFetchedListener.onLocationFetched();
+                }
             }
 
             @Override
@@ -71,6 +83,8 @@ public class LocationUpdateUtils {
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_UPDATE_INTERVAL, MIN_UPDATE_DIST, privateLocationListener);
     }
 
-
+    public interface OnLocationFetchedListener{
+        void onLocationFetched();
+    }
 
 }
