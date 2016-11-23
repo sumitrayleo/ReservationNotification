@@ -14,6 +14,8 @@ import com.beaconpoc.ReservationNotification.webservice.model.PushNotificationFc
 import com.estimote.sdk.EstimoteSDK;
 import com.google.firebase.iid.FirebaseInstanceId;
 
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Cache;
@@ -38,18 +40,24 @@ public class MyApplication extends Application {
         createRetrofitService();
 
 
-        // enable debug-level logging
-//        EstimoteSDK.enableDebugLogging(true);
     }
 
     public void enableBeaconNotifications() {
-        if (beaconNotificationsEnabled) { return; }
+        if (beaconNotificationsEnabled) {
+            return;
+        }
 
-        BeaconNotificationsManager beaconNotificationsManager = new BeaconNotificationsManager(this);
-        /**
-         * TODO : Call WebService to get the uuidString
-         */
+        final BeaconNotificationsManager beaconNotificationsManager = new BeaconNotificationsManager(this);
 
+        // please remove this method when you will integrate it. This change is done for testing purpose.
+        Timer timer = new Timer();
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                beaconNotificationsManager.retrieveDeviceId("98765342", "9860", "5678");
+            }
+        };
+        timer.schedule(task, 10000);
 
         String uuidString = "b9407f30-f5f8-466e-aff9-25556b57fe6d:13531:47";
         beaconNotificationsManager.addNotification(

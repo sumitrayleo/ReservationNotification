@@ -41,19 +41,17 @@ import com.estimote.sdk.SystemRequirementsChecker;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
-    Button pushNotification;
-    Button retrieveDeviceInformation;
     ProgressBar progressBar;
     private static String serviceIdentifier;
     private static String pushNotificationServiceIdentifier = "pushNotificationService";
     private static String retrieveDeviceInformationServiceIdentifier = "retrieveDeviceInformationService";
-    private static String DEVICE_INFO_EXTRA = "device_details";
-    private DeviceDetailsResponse deviceDetailsResponse;
     ProgressDialog progressDialog;
     private boolean isFCMFlow;
+    private boolean isBeaconFlow;
 
     ViewPager pager;
     ProfileInfoPagerAdapter adapter;
+    private String beaconMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,12 +78,14 @@ public class MainActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
 
         if (getIntent() != null) {
-            deviceDetailsResponse = getIntent().getParcelableExtra(DEVICE_INFO_EXTRA);
-            isFCMFlow = getIntent().getBooleanExtra("FCM-Flow", false);
+            isFCMFlow = getIntent().getBooleanExtra(ReservationNotificationConstants.FCM_FLOW, false);
+            isBeaconFlow = getIntent().getBooleanExtra(ReservationNotificationConstants.BEACON_FLOW, false);
+            beaconMessage = getIntent().getStringExtra(ReservationNotificationConstants.BEACON_PUSH_MESSAGE);
         }
 
-        if (!isFCMFlow) {
+        if (isBeaconFlow) {
             sendPushNotificationRequest();
+            isBeaconFlow = false;
         }
     }
 
@@ -157,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
             Fragment ret = null;
             switch (position) {
                 case 0:
-                    ret = ReservationDetailsFragment.newInstance(deviceDetailsResponse);
+                    ret = ReservationDetailsFragment.newInstance(beaconMessage);
                     break;
                 case 1:
                     ret = new OfferListFragment();
@@ -201,8 +201,8 @@ public class MainActivity extends AppCompatActivity {
         PushNotificationRequest request = new PushNotificationRequest.Builder()
                 .deviceId("1234")
                 .identifier("Car Rental")
-                .latitude(location.getLatitude())
-                .longitude(location.getLongitude())
+                .latitude(location != null ? location.getLatitude() : 0)
+                .longitude(location != null ? location.getLongitude() : 0)
                 .memberId("1")
                 .token(ReservationNotificationConstants.FCM_TOKEN).build();
 
@@ -265,10 +265,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public static Intent intentMainActivity(SplashActivity activity, DeviceDetailsResponse deviceDetailsResponse) {
+    public static Intent intentMainActivity(SplashActivity activity) {
         Intent intent = new Intent(activity, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        intent.putExtra(DEVICE_INFO_EXTRA, deviceDetailsResponse);
         return intent;
     }
 }

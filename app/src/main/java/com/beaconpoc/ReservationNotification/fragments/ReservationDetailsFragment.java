@@ -34,11 +34,11 @@ public class ReservationDetailsFragment extends BaseFragment {
         return inflateView;
     }
 
-    private void setData(View inflateView){
+    private void setData(View inflateView) {
 
-        if(((MyApplication)getActivity().getApplication()).getPushNotificationFcmModel() != null) {
+        if (((MyApplication) getActivity().getApplication()).getPushNotificationFcmModel() != null) {
 
-            PushNotificationFcmModel pushNotificationFcmModel = ((MyApplication)getActivity().getApplication()).getPushNotificationFcmModel();
+            PushNotificationFcmModel pushNotificationFcmModel = ((MyApplication) getActivity().getApplication()).getPushNotificationFcmModel();
 
             ((ScrollView) inflateView.findViewById(R.id.ParentScrollView)).setVisibility(View.VISIBLE);
             ((TextView) inflateView.findViewById(R.id.welcome_msg)).setVisibility(View.GONE);
@@ -52,24 +52,24 @@ public class ReservationDetailsFragment extends BaseFragment {
             ((TextView) inflateView.findViewById(R.id.reservation_special_instructions))
                     .setText(pushNotificationFcmModel.getReservations().get(0).getSpecialInstructions());
 
-        }else{
+        } else {
 
             ((ScrollView) inflateView.findViewById(R.id.ParentScrollView)).setVisibility(View.GONE);
             ((TextView) inflateView.findViewById(R.id.welcome_msg)).setVisibility(View.VISIBLE);
-            if(getArguments() != null) {
-                DeviceDetailsResponse deviceDetailsResponse = (DeviceDetailsResponse)getArguments().getParcelable(DEVICE_DETAILS_ARGUMENT);
-                ((TextView) inflateView.findViewById(R.id.welcome_msg)).setText(deviceDetailsResponse.getDeviceInfo().getMessage());
+            if (getArguments() != null) {
+                String deviceDetailsResponse = getArguments().getString(DEVICE_DETAILS_ARGUMENT);
+                ((TextView) inflateView.findViewById(R.id.welcome_msg)).setText(deviceDetailsResponse);
             }
 
         }
 
     }
 
-    public static ReservationDetailsFragment newInstance(DeviceDetailsResponse deviceDetailsResponse) {
+    public static ReservationDetailsFragment newInstance(String message) {
         ReservationDetailsFragment reservationDetailsFragment = new ReservationDetailsFragment();
         // Supply index input as an argument.
         Bundle bundle = new Bundle();
-        bundle.putParcelable(DEVICE_DETAILS_ARGUMENT, deviceDetailsResponse);
+        bundle.putString(DEVICE_DETAILS_ARGUMENT, message);
         reservationDetailsFragment.setArguments(bundle);
         return reservationDetailsFragment;
     }
