@@ -32,11 +32,7 @@ public class BeaconNotificationsManager {
     private List<Region> regionsToMonitor = new ArrayList<>();
     private HashMap<String, String> enterMessages = new HashMap<>();
     private HashMap<String, String> exitMessages = new HashMap<>();
-    private static int notificationEnterCount = 0;
-    private static int notificationExitCount = 0;
-
     private Context context;
-
     private int notificationID = 0;
 
     public BeaconNotificationsManager(Context context) {
@@ -45,37 +41,16 @@ public class BeaconNotificationsManager {
         beaconManager.setMonitoringListener(new BeaconManager.MonitoringListener() {
             @Override
             public void onEnteredRegion(Region region, List<Beacon> list) {
-                StringBuilder sb = new StringBuilder();
-                int i = 1;
-                for (Beacon beacon : list) {
-                    if (beacon != null) {
-                        sb.append("Beacon-").append(i).append(" ");
-                        sb.append(":").append(beacon.getMajor()).append(":").append(beacon.getMinor());//append(beacon.getProximityUUID())
-                        i++;
-                    }
-                }
-                Log.d(TAG, "onEnteredRegion: " + region.getIdentifier());
-                retrieveDeviceId("98765342", "9860", "5678");
-
-                String message = enterMessages.get(region.getIdentifier());
-                if (message != null) {
-                    if (notificationEnterCount < 1) {
-                        showNotification(message + ">" + notificationEnterCount + "-" + sb.toString());
-                    }
-                    notificationEnterCount++;
+                if(!list.isEmpty()) {
+                    Beacon beacon = list.get(0);
+                    Log.d(TAG, "onEnteredRegion:" + beacon.getProximityUUID() + "--" + beacon.getMajor() + "--" + beacon.getMinor());
+                    retrieveDeviceId(beacon.getProximityUUID().toString(), Integer.toString(beacon.getMajor()), Integer.toString(beacon.getMinor()));
                 }
             }
 
             @Override
             public void onExitedRegion(Region region) {
                 Log.d(TAG, "onExitedRegion: " + region.getIdentifier());
-                String message = exitMessages.get(region.getIdentifier());
-                if (message != null) {
-                    if (notificationExitCount == notificationEnterCount - 1) {
-                        showNotification(message + ">" + notificationEnterCount + "-" + " " + region.getMajor() + ":" + region.getMinor());
-                    }
-                    notificationExitCount++;
-                }
             }
         });
     }
