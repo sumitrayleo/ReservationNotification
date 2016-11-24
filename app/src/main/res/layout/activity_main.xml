@@ -45,4 +45,18 @@
         </LinearLayout>
     </android.support.design.widget.CoordinatorLayout>
 
+    <android.support.design.widget.FloatingActionButton
+        style="@style/button.fab"
+        android:id="@+id/getDirection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        custom:backgroundTint="@color/swatch_confirm_green_primary"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:onClick="gotoDirections"
+        android:src="@mipmap/sent">
+    </android.support.design.widget.FloatingActionButton>
+
 </RelativeLayout>

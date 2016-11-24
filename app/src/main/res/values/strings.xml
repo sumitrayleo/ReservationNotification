@@ -5,4 +5,13 @@
     <string name="directions">Directions</string>
     <string name="app_heading">Reservation Notification</string>
     <string name="reservation_details">Reservation Details :</string>
+    <string name="get_directions">Get Directions</string>
+    <string name="poi">POI</string>
+    <string name="about">About</string>
+    <string name="settings">Settings</string>
+    <string name="home">Home</string>
+    <string name="poi_header">Point Of Interest</string>
+    <string name="home_header">Reservation Notification</string>
+    <string name="promo_header">Promo Offers</string>
+    <string name="search_header">Search Reservations</string>
 </resources>

@@ -7,6 +7,7 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -25,6 +26,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.beaconpoc.ReservationNotification.constant.AppBarType;
 import com.beaconpoc.ReservationNotification.constant.ReservationNotificationConstants;
 import com.beaconpoc.ReservationNotification.fragments.BaseFragment;
 import com.beaconpoc.ReservationNotification.fragments.OfferListFragment;
@@ -38,7 +40,7 @@ import com.beaconpoc.ReservationNotification.webservice.model.EhiErrorInfo;
 import com.beaconpoc.ReservationNotification.webservice.model.PushNotificationRequest;
 import com.estimote.sdk.SystemRequirementsChecker;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     private static final String TAG = "MainActivity";
     ProgressBar progressBar;
@@ -72,10 +74,7 @@ public class MainActivity extends AppCompatActivity {
         progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
-        ActionBar actionBar = getSupportActionBar();
+        setupAppBar("Home Screen" , AppBarType.NAV_MENU);
 
         if (getIntent() != null) {
             isFCMFlow = getIntent().getBooleanExtra(ReservationNotificationConstants.FCM_FLOW, false);
@@ -87,26 +86,19 @@ public class MainActivity extends AppCompatActivity {
             sendPushNotificationRequest();
             isBeaconFlow = false;
         }
-    }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_direction, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
-        switch (item.getItemId()) {
-            case R.id.direction:
-                Intent launchPromoOffer = new Intent(MainActivity.this, PromoOfferDetailsActivity.class);
-                startActivity(launchPromoOffer);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if(isFCMFlow){
+            ((FloatingActionButton)findViewById(R.id.getDirection)).setVisibility(View.VISIBLE);
+        }else{
+            ((FloatingActionButton)findViewById(R.id.getDirection)).setVisibility(View.GONE);
         }
+
+        if(!isBeaconFlow && !isFCMFlow){
+            Intent intent = new Intent(this, SearchActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
     }
 
     /**
@@ -250,6 +242,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
+    public void gotoDirections(View view){
+        Intent launchPromoOffer = new Intent(MainActivity.this, PromoOfferDetailsActivity.class);
+        startActivity(launchPromoOffer);
+    }
+
 
     @Override
     protected void onResume() {

@@ -40,7 +40,7 @@ public class PromoOfferDetailsFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         View inflateView = inflater.inflate(R.layout.fragment_promo_offer_details, container, false);
         ((TextView) inflateView.findViewById(R.id.landMarkInstructions))
-                .setText(driveDistance.getLandMarkInstructions());
+                .setText(driveDistance != null ? driveDistance.getLandMarkInstructions() : "");
 
         return inflateView;
     }

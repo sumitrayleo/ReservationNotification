@@ -1,15 +1,15 @@
-package com.beaconpoc.ReservationNotification;
+package com.beaconpoc.ReservationNotification.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.beaconpoc.ReservationNotification.model.PromoItem;
+import com.beaconpoc.ReservationNotification.R;
+import com.beaconpoc.ReservationNotification.model.OfferItem;
 
 import java.util.List;
 
@@ -18,10 +18,10 @@ import java.util.List;
  */
 
 public class OfferListAdapter  extends RecyclerView.Adapter<OfferListAdapter.CustomViewHolder> {
-    private List<PromoItem> promoItemList;
+    private List<OfferItem> promoItemList;
     private Context mContext;
 
-    public OfferListAdapter(Context context, List<PromoItem> promoItemList) {
+    public OfferListAdapter(Context context, List<OfferItem> promoItemList) {
         this.promoItemList = promoItemList;
         this.mContext = context;
     }
@@ -35,7 +35,7 @@ public class OfferListAdapter  extends RecyclerView.Adapter<OfferListAdapter.Cus
 
     @Override
     public void onBindViewHolder(CustomViewHolder customViewHolder, int i) {
-        PromoItem promoItem = promoItemList.get(i);
+        OfferItem promoItem = promoItemList.get(i);
 
         customViewHolder.imageView.setImageResource(R.mipmap.ic_launcher);
         customViewHolder.title.setText(promoItem.getTitle());

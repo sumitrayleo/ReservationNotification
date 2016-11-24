@@ -4,7 +4,7 @@ package com.beaconpoc.ReservationNotification.model;
  * Created by Aparupa on 11/18/2016.
  */
 
-public class PromoItem {
+public class OfferItem {
 
     private String title;
     private String description;
