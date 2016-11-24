@@ -12,7 +12,6 @@ import com.beaconpoc.ReservationNotification.MainActivity;
 import com.beaconpoc.ReservationNotification.MyApplication;
 import com.beaconpoc.ReservationNotification.constant.ReservationNotificationConstants;
 import com.beaconpoc.ReservationNotification.webservice.ResponseCallBackHandler;
-import com.beaconpoc.ReservationNotification.webservice.ServiceUtils;
 import com.beaconpoc.ReservationNotification.webservice.model.DeviceDetailsResponse;
 import com.beaconpoc.ReservationNotification.webservice.model.EhiErrorInfo;
 import com.estimote.sdk.Beacon;
@@ -32,6 +31,11 @@ public class BeaconNotificationsManager {
     private List<Region> regionsToMonitor = new ArrayList<>();
     private HashMap<String, String> enterMessages = new HashMap<>();
     private HashMap<String, String> exitMessages = new HashMap<>();
+
+
+    private static HashMap<String, Long> enteredBeaconList = new HashMap<String, Long>();
+    public static final long DO_NOT_NOTIFY_HOURS = 24;
+
     private Context context;
     private int notificationID = 0;
 
@@ -43,8 +47,13 @@ public class BeaconNotificationsManager {
             public void onEnteredRegion(Region region, List<Beacon> list) {
                 if(!list.isEmpty()) {
                     Beacon beacon = list.get(0);
-                    Log.d(TAG, "onEnteredRegion:" + beacon.getProximityUUID() + "--" + beacon.getMajor() + "--" + beacon.getMinor());
-                    retrieveDeviceId(beacon.getProximityUUID().toString(), Integer.toString(beacon.getMajor()), Integer.toString(beacon.getMinor()));
+                    String beaconIdentification = beacon.getProximityUUID()+":"+beacon.getMajor()+":"+beacon.getMinor();
+                    Log.d(TAG, "onEnteredRegion:" + beaconIdentification);
+                    if (enteredBeaconList.get(beaconIdentification)==null ||
+                            (enteredBeaconList.get(beaconIdentification)!=null && ((System.currentTimeMillis()- enteredBeaconList.get(beaconIdentification))/(1000*60*60)) > DO_NOT_NOTIFY_HOURS)){
+                        enteredBeaconList.put(beaconIdentification, System.currentTimeMillis());
+                        retrieveDeviceId(beacon.getProximityUUID().toString(), Integer.toString(beacon.getMajor()), Integer.toString(beacon.getMinor()));
+                    }
                 }
             }
 
