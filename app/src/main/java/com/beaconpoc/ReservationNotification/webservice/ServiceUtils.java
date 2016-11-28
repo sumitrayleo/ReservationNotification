@@ -104,7 +104,7 @@ public class ServiceUtils {
      * @return String
      */
 
-    public static String postPushNotificationData() {
+    public static String postPushNotificationData(String token) {
 
         String responseData="";
         boolean result = false;
@@ -122,6 +122,7 @@ public class ServiceUtils {
             object.put("latitude", "65.7");
             object.put("longitude", "87.6");
             object.put("identifier", "Car Rental");
+            object.put("token", token);
 
         } catch (Exception ex) {
             ex.printStackTrace();

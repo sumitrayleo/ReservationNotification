@@ -4,11 +4,16 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.beaconpoc.ReservationNotification.MainActivity;
-import com.beaconpoc.ReservationNotification.webservice.ServiceUtils;
+import com.beaconpoc.ReservationNotification.MyApplication;
+import com.beaconpoc.ReservationNotification.constant.ReservationNotificationConstants;
+import com.beaconpoc.ReservationNotification.webservice.ResponseCallBackHandler;
+import com.beaconpoc.ReservationNotification.webservice.model.DeviceDetailsResponse;
+import com.beaconpoc.ReservationNotification.webservice.model.EhiErrorInfo;
 import com.estimote.sdk.Beacon;
 import com.estimote.sdk.BeaconManager;
 import com.estimote.sdk.Region;
@@ -26,11 +31,12 @@ public class BeaconNotificationsManager {
     private List<Region> regionsToMonitor = new ArrayList<>();
     private HashMap<String, String> enterMessages = new HashMap<>();
     private HashMap<String, String> exitMessages = new HashMap<>();
-    private static int notificationEnterCount = 0;
-    private static int notificationExitCount = 0;
+
+
+    private static HashMap<String, Long> enteredBeaconList = new HashMap<String, Long>();
+    public static final long DO_NOT_NOTIFY_HOURS = 24;
 
     private Context context;
-
     private int notificationID = 0;
 
     public BeaconNotificationsManager(Context context) {
@@ -39,42 +45,21 @@ public class BeaconNotificationsManager {
         beaconManager.setMonitoringListener(new BeaconManager.MonitoringListener() {
             @Override
             public void onEnteredRegion(Region region, List<Beacon> list) {
-                StringBuilder sb = new StringBuilder();
-                int i =1;
-                for (Beacon beacon: list) {
-                    if (beacon!=null){
-                        sb.append("Beacon-").append(i).append(" ");
-                        sb.append(":").append(beacon.getMajor()).append(":").append(beacon.getMinor());//append(beacon.getProximityUUID())
-                        i++;
+                if(!list.isEmpty()) {
+                    Beacon beacon = list.get(0);
+                    String beaconIdentification = beacon.getProximityUUID()+":"+beacon.getMajor()+":"+beacon.getMinor();
+                    Log.d(TAG, "onEnteredRegion:" + beaconIdentification);
+                    if (enteredBeaconList.get(beaconIdentification)==null ||
+                            (enteredBeaconList.get(beaconIdentification)!=null && ((System.currentTimeMillis()- enteredBeaconList.get(beaconIdentification))/(1000*60*60)) > DO_NOT_NOTIFY_HOURS)){
+                        enteredBeaconList.put(beaconIdentification, System.currentTimeMillis());
+                        retrieveDeviceId(beacon.getProximityUUID().toString(), Integer.toString(beacon.getMajor()), Integer.toString(beacon.getMinor()));
                     }
                 }
-                Log.d(TAG, "onEnteredRegion: " + region.getIdentifier());
-
-                //TODO : Call Webservice to retrieve Location and show location in Welcome message
-                //ServiceUtils.retrieveDeviceInformation();
-
-                String message = enterMessages.get(region.getIdentifier());
-                if (message != null) {
-                    if (notificationEnterCount < 1){
-                        showNotification(message+">"+notificationEnterCount+"-"+sb.toString());
-                    }
-                    notificationEnterCount++;
-                }
-
-                // WebService Here to trigger backend check-in processes
-                ServiceUtils.postPushNotificationData();
             }
 
             @Override
             public void onExitedRegion(Region region) {
                 Log.d(TAG, "onExitedRegion: " + region.getIdentifier());
-                String message = exitMessages.get(region.getIdentifier());
-                if (message != null) {
-                    if (notificationExitCount==notificationEnterCount-1){
-                        showNotification(message+">"+notificationEnterCount+"-"+" "+region.getMajor()+":"+region.getMinor());
-                    }
-                    notificationExitCount++;
-                }
             }
         });
     }
@@ -90,7 +75,7 @@ public class BeaconNotificationsManager {
         beaconManager.connect(new BeaconManager.ServiceReadyCallback() {
             @Override
             public void onServiceReady() {
-                beaconManager.startMonitoring(new Region(uuidString,null,null,null));
+                beaconManager.startMonitoring(new Region(uuidString, null, null, null));
             }
         });
     }
@@ -106,8 +91,34 @@ public class BeaconNotificationsManager {
         });
     }
 
+    public void retrieveDeviceId(@NonNull String uuid, @NonNull String region, @NonNull String assetId) {
+
+        ResponseCallBackHandler<DeviceDetailsResponse> callBackHandler = new ResponseCallBackHandler<DeviceDetailsResponse>() {
+            @Override
+            public void success(DeviceDetailsResponse response) {
+                Log.d(TAG, "inside success callback");
+                if (response != null && response.getDeviceInfo() != null) {
+                    showNotification(response.getDeviceInfo().getMessage());
+                }
+            }
+
+            @Override
+            public void failure(EhiErrorInfo errorInfo) {
+                Log.d(TAG, "inside failure callback");
+                return;
+            }
+        };
+
+        ((MyApplication) context.getApplicationContext()).getEhiNotificationServiceApi().
+                getDeviceInfoById(uuid, region, assetId, callBackHandler);
+
+    }
+
     private void showNotification(String message) {
         Intent resultIntent = new Intent(context, MainActivity.class);
+        resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        resultIntent.putExtra(ReservationNotificationConstants.BEACON_PUSH_MESSAGE, message);
+        resultIntent.putExtra(ReservationNotificationConstants.BEACON_FLOW, true);
         PendingIntent resultPendingIntent = PendingIntent.getActivity(
                 context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -117,6 +128,7 @@ public class BeaconNotificationsManager {
                 .setContentText(message)
                 .setDefaults(NotificationCompat.DEFAULT_ALL)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setAutoCancel(true)
                 .setContentIntent(resultPendingIntent);
 
         NotificationManager notificationManager =

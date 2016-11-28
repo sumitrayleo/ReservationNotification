@@ -1,0 +1,46 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/activity_horizontal_margin"
+    tools:context="com.beaconpoc.ReservationNotification.fragments.PromoOfferDetailsFragment">
+
+    <ImageView
+        android:id="@+id/mapview"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:src="@drawable/mapimage" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/bg_with_shadow"
+        android:layout_margin="@dimen/margin_medium">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/sub_heading"
+        android:gravity="center_vertical"
+        android:text="LandMark Instructions :"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/margin_medium"
+        android:paddingBottom="@dimen/margin_medium"/>
+
+        <View style="@style/separator"/>
+
+    <TextView
+        android:id="@+id/landMarkInstructions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:textColor="@android:color/black"
+        style="@style/content_style"
+        android:padding="@dimen/activity_horizontal_margin"/>
+
+    </LinearLayout>
+
+</LinearLayout>

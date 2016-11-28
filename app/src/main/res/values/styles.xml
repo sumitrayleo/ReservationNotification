@@ -1,11 +1,80 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Theme customizations available in newer API levels can go in res/values-vXX/styles.xml, while -->
+        <!-- customizations related to backward-compatibility can go here. -->
+    </style>
+
+    <style name="AppTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">@color/white</item>
+        <item name="actionMenuTextColor">@color/white</item>
+        <item name="android:actionMenuTextColor">@color/white</item>
+    </style>
+
+    <style name="tab_layout">
+        <item name="android:background">@color/tab_bar_bg</item>
+        <item name="tabIndicatorColor">@color/swatch_confirm_green_primary</item>
+        <item name="tabTextColor">@color/swatch_confirm_green_primary</item>
+        <item name="tabSelectedTextColor">@color/white</item>
+    </style>
+
+    <style name="toolbarTitleAppearance" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">@dimen/heading_textsize</item>
+    </style>
+
+    <style name="sub_heading" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textColor">@color/dark_grey</item>
+        <item name="android:textSize">@dimen/heading_textsize</item>
+    </style>
+
+    <style name="content_style" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textColor">@color/dark_grey</item>
+        <item name="android:textSize">@dimen/medium_textsize</item>
+    </style>
+
+    <style name="separator">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">@color/light_grey</item>
+    </style>
+
+    <style name="medium_text_bold" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/medium_textsize</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="splashTitleAppearance" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">25sp</item>
+    </style>
+
+    <style name="SearchToolbarTheme" parent="AppBaseTheme">
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorPrimaryDark">@color/white</item>
+        <item name="colorAccent">@color/white</item>
+        <item name="android:textCursorDrawable">@null</item>
+        <item name="android:textColorSecondary">@color/white</item>
+        <item name="actionMenuTextColor">@color/white</item>
+        <item name="android:actionMenuTextColor">@color/white</item>
+        <!-- SearchView -->
+        <item name="searchViewStyle">@style/SearchToolbarTheme.SearchView</item>
+    </style>
+
+    <style name="SearchToolbarTheme.SearchView" parent="Widget.AppCompat.SearchView">
+        <item name="queryBackground">@drawable/rounded_corner_bg</item>
+    </style>
+
+    <style name="button.fab" parent="Widget.Design.FloatingActionButton">
+        <item name="borderWidth">0dp</item>
+        <item name="fabSize">normal</item>
+        <item name="elevation">4dp</item>
     </style>
 
 </resources>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:minHeight="?attr/actionBarSize"
+        android:background="@color/swatch_emerald_green_secondary"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tabbar_height"
+        android:background="@drawable/bg_with_shadow"
+        android:hint="Reservation Number"
+        android:textColorHint="@color/light_grey"
+        android:textColor="@color/dark_grey"
+        android:drawableLeft="@mipmap/search"
+        android:drawablePadding="@dimen/margin_small"
+        android:padding="@dimen/margin_medium"
+        android:enabled="false"
+        android:layout_margin="@dimen/activity_horizontal_margin"/>
+
+</LinearLayout>
