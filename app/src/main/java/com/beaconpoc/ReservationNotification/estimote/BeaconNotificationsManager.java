@@ -128,6 +128,7 @@ public class BeaconNotificationsManager {
                 .setContentText(message)
                 .setDefaults(NotificationCompat.DEFAULT_ALL)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setAutoCancel(true)
                 .setContentIntent(resultPendingIntent);
 
         NotificationManager notificationManager =
