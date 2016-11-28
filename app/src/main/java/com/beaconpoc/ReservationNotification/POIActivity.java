@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import com.beaconpoc.ReservationNotification.adapter.OfferListAdapter;
 import com.beaconpoc.ReservationNotification.constant.AppBarType;
 import com.beaconpoc.ReservationNotification.model.OfferItem;
+import com.beaconpoc.ReservationNotification.webservice.model.PointOfInterestModel;
 import com.beaconpoc.ReservationNotification.webservice.model.PushNotificationFcmModel;
 import com.beaconpoc.ReservationNotification.webservice.model.RulesModel;
 
@@ -35,17 +36,12 @@ public class POIActivity extends BaseActivity {
         POIList = new ArrayList<>();
         if(((MyApplication) getApplication()).getPushNotificationFcmModel() != null) {
             PushNotificationFcmModel pushNotificationFcmModel = ((MyApplication) getApplication()).getPushNotificationFcmModel();
-            List<RulesModel> rulesModels = pushNotificationFcmModel.getReservations().get(0).getPromoOffers().getRules();
-            for (int i = 0; i < rulesModels.size(); i++) {
+            List<PointOfInterestModel> pointOfInterestModel = pushNotificationFcmModel.getPoi();
+            for (int i = 0; i < pointOfInterestModel.size(); i++) {
                 OfferItem item = new OfferItem();
-                item.setTitle(rulesModels.get(i).getCategory()
-                        + " @"
-                        + rulesModels.get(i).getDiscount()
-                        + " "
-                        + rulesModels.get(i).getDiscountType()
-                        + " discount");
-                item.setDescription(rulesModels.get(i).getDescription());
-                item.setPromocode("Promo Code : " + rulesModels.get(i).getPromoCodeId());
+                item.setTitle(pointOfInterestModel.get(i).getName());
+                item.setDescription(pointOfInterestModel.get(i).getSpecialInstructions());
+                item.setPromocode("Loyalty Code : " + pointOfInterestModel.get(i).getPromoOffers().getLoyaltyCode());
                 POIList.add(item);
             }
         }

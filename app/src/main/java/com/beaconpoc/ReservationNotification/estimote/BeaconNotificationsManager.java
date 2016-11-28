@@ -116,6 +116,7 @@ public class BeaconNotificationsManager {
 
     private void showNotification(String message) {
         Intent resultIntent = new Intent(context, MainActivity.class);
+        resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         resultIntent.putExtra(ReservationNotificationConstants.BEACON_PUSH_MESSAGE, message);
         resultIntent.putExtra(ReservationNotificationConstants.BEACON_FLOW, true);
         PendingIntent resultPendingIntent = PendingIntent.getActivity(

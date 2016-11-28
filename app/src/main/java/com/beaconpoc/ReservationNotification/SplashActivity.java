@@ -33,8 +33,21 @@ public class SplashActivity extends Activity {
         progressDialog = new ProgressDialog(this, ProgressDialog.STYLE_SPINNER);
         progressDialog.setMessage("Fetching Location");
         progressDialog.setCancelable(false);
+        new Thread(){
 
-        checkPermissionForLocationUpdate();
+            @Override
+            public void run() {
+                try {
+                    sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }finally {
+                    launchHomeScreen();
+                }
+            }
+        }.start();
+
+//        checkPermissionForLocationUpdate();
     }
 
     @TargetApi(23)

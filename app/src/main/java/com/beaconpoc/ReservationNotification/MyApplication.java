@@ -50,22 +50,22 @@ public class MyApplication extends Application {
         final BeaconNotificationsManager beaconNotificationsManager = new BeaconNotificationsManager(this);
 
         // TODO: please remove this method when you will integrate it. This change is done for testing purpose.
-        /*Timer timer = new Timer();
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
+//        Timer timer = new Timer();
+//        TimerTask task = new TimerTask() {
+//            @Override
+//            public void run() {
                 beaconNotificationsManager.retrieveDeviceId("98765342", "9860", "5678");
-            }
-        };
-        timer.schedule(task, 10000);
-        */
+//            }
+//        };
+//        timer.schedule(task, 10000);
+
         String uuidString = "b9407f30-f5f8-466e-aff9-25556b57fe6d:13531:47";
 
         // TODO: This line of code has to be enabled if we want to test the app without the aid of a physical beacon
-        /*beaconNotificationsManager.addNotification(
+        beaconNotificationsManager.addNotification(
                 new BeaconID("B9407F30-F5F8-466E-AFF9-25556B57FE6D", 13531, 47),
                 "Hello Guest.",
-                "Goodbye Guest.");*/
+                "Goodbye Guest.");
         beaconNotificationsManager.startMonitoringAllBeacons(uuidString);
 
         beaconNotificationsEnabled = true;

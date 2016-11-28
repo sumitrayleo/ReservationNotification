@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.beaconpoc.ReservationNotification.constant.AppBarType;
+import com.beaconpoc.ReservationNotification.constant.ReservationNotificationConstants;
 
 /**
  * Created by Aparupa on 11/17/2016.
@@ -76,16 +77,24 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
 
+        Intent intent;
+
         switch (item.getItemId()){
 
             case R.id.home :
+
+                intent = new Intent(this, MainActivity.class);
+                intent.putExtra(ReservationNotificationConstants.FCM_FLOW, true);
+                startActivity(intent);
+                finish();
 
                 break;
 
             case R.id.poi :
 
-                Intent launchPromoOffer = new Intent(this, POIActivity.class);
-                startActivity(launchPromoOffer);
+                intent = new Intent(this, POIActivity.class);
+                startActivity(intent);
+                finish();
 
                 break;
 
@@ -131,4 +140,9 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
 }

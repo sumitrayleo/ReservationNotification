@@ -82,6 +82,12 @@ public class MainActivity extends BaseActivity {
             beaconMessage = getIntent().getStringExtra(ReservationNotificationConstants.BEACON_PUSH_MESSAGE);
         }
 
+        if(!isBeaconFlow && !isFCMFlow){
+            Intent intent = new Intent(this, SearchActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
         if (isBeaconFlow) {
             sendPushNotificationRequest();
             isBeaconFlow = false;
@@ -91,12 +97,6 @@ public class MainActivity extends BaseActivity {
             ((FloatingActionButton)findViewById(R.id.getDirection)).setVisibility(View.VISIBLE);
         }else{
             ((FloatingActionButton)findViewById(R.id.getDirection)).setVisibility(View.GONE);
-        }
-
-        if(!isBeaconFlow && !isFCMFlow){
-            Intent intent = new Intent(this, SearchActivity.class);
-            startActivity(intent);
-            finish();
         }
 
     }
@@ -171,13 +171,13 @@ public class MainActivity extends BaseActivity {
     private void sendPushNotificationRequest() {
 
         progressDialog.setMessage("Requesting Push Notification...");
-        progressDialog.show();
+//        progressDialog.show();
 
         ResponseCallBackHandler<DefaultResponse> callBackHandler = new ResponseCallBackHandler<DefaultResponse>() {
             @Override
             public void success(DefaultResponse response) {
                 Log.d(TAG, "inside success callback");
-                progressDialog.dismiss();
+//                progressDialog.dismiss();
                 Toast.makeText(getApplicationContext(), response.getMessage(), Toast.LENGTH_LONG).show();
             }
 
@@ -246,21 +246,6 @@ public class MainActivity extends BaseActivity {
     public void gotoDirections(View view){
         Intent launchPromoOffer = new Intent(MainActivity.this, PromoOfferDetailsActivity.class);
         startActivity(launchPromoOffer);
-    }
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        MyApplication app = (MyApplication) getApplication();
-
-        if (!SystemRequirementsChecker.checkWithDefaultDialogs(this)) {
-            Log.e(TAG, "Can't scan for beacons, some pre-conditions were not met");
-        } else if (!app.isBeaconNotificationsEnabled()) {
-            Log.d(TAG, "Enabling beacon notifications");
-            app.enableBeaconNotifications();
-        }
     }
 
     public static Intent intentMainActivity(SplashActivity activity) {
