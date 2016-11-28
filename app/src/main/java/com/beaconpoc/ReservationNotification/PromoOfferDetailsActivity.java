@@ -16,7 +16,7 @@ public class PromoOfferDetailsActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_promo_offer_details);
 
-        setupAppBar(getString(R.string.promo_header) , AppBarType.BACK_ARROW);
+        setupAppBar(getString(R.string.directions) , AppBarType.BACK_ARROW);
 
         final FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.container);
