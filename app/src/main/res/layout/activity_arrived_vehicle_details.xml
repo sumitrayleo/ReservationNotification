@@ -4,31 +4,30 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/welcome_msg"
-        android:text=""
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bg_with_shadow"
-        android:gravity="center"
-        android:layout_margin="@dimen/activity_horizontal_margin"
-        style="@style/sub_heading"
-        android:padding="@dimen/margin_medium"/>
-
     <ScrollView
         android:id="@+id/ParentScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/bg_with_shadow"
-        android:layout_margin="@dimen/activity_horizontal_margin"
         android:scrollbars="none"
-        android:visibility="visible"
-        android:layout_below="@+id/welcome_msg">
+        android:visibility="visible">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/bg_with_shadow"
+            android:layout_margin="@dimen/activity_horizontal_margin"
             android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/welcome_msg"
+                android:text=""
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_with_shadow"
+                android:gravity="center"
+                android:layout_margin="@dimen/activity_horizontal_margin"
+                style="@style/sub_heading"
+                android:padding="@dimen/margin_medium"/>
 
             <TextView
                 android:id="@+id/reservation_id"
