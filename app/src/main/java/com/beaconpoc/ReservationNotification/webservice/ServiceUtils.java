@@ -1,5 +1,7 @@
 package com.beaconpoc.ReservationNotification.webservice;
 
+import com.beaconpoc.ReservationNotification.constant.EhiNotificationConstants;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -16,55 +18,6 @@ import java.io.InputStreamReader;
 public class ServiceUtils {
 
     /**
-     * Post Login Service
-     * @return
-     */
-
-    public String postLoginData() {
-
-        String responseData="";
-        boolean result = false;
-        HttpClient hc = new DefaultHttpClient();
-        String message;
-
-        HttpPost httpPost = new HttpPost("http://10.0.2.2:8080/booking-engine/api/booking/login");
-        JSONObject object = new JSONObject();
-
-        try {
-
-            object.put("username", "admin");
-            object.put("password", "test");
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
-        try {
-
-            message = object.toString();
-            httpPost.setEntity(new StringEntity(message, "UTF8"));
-            httpPost.setHeader("Content-type", "application/json");
-            httpPost.setHeader("Booking-API-Key","1Q7VbsO93CPDMxTyzYp0ADnXG56gaRymAsp3vRiTcfw");
-            httpPost.setHeader("appPlatform","android");
-
-            HttpResponse resp = hc.execute(httpPost);
-
-            if (resp != null) {
-                if (resp.getStatusLine().getStatusCode() == 204)
-                    result = true;
-            }
-
-            responseData= readResponse(resp);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-
-        }
-        return responseData;
-    }
-
-
-    /**
      * Get retrieveDeviceInformation Service
      * @return String
      */
@@ -73,7 +26,7 @@ public class ServiceUtils {
         String responseData="";
         boolean result = false;
         HttpClient hc = new DefaultHttpClient();
-        HttpGet httpGet= new HttpGet("http://booking-engine-layer.cloudhub.io/service/api/booking/device/info?appName=EHI");
+        HttpGet httpGet= new HttpGet(EhiNotificationConstants.BASE_URL + "api/booking/device/info?appName=EHI");
 
         try {
 
@@ -112,7 +65,7 @@ public class ServiceUtils {
         String message;
 
         //HttpPost httpPost = new HttpPost("http://10.0.2.2:8080/booking-engine/api/booking/notify/info");
-        HttpPost  httpPost = new HttpPost("http://booking-engine-layer.cloudhub.io/service/api/booking/notify/info");
+        HttpPost  httpPost = new HttpPost(EhiNotificationConstants.BASE_URL + "api/booking/notify/info");
         JSONObject object = new JSONObject();
 
         try {
