@@ -128,7 +128,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             }.getType();
             pushNotificationFcmModel.setReservations((List<ReservationModel>) gson.fromJson(reservations, reservationsListType));
             ((MyApplication) getApplication()).setPushNotificationFcmModel(pushNotificationFcmModel);
-            if(remoteMessage.getData().get("callingIdentity").equalsIgnoreCase("BM")){
+            if("BM".equalsIgnoreCase(remoteMessage.getData().get("callingIdentity"))){
                 sendNotification(pushNotificationFcmModel, ArrivedVehicleDetailsActivity.class);
             }else{
                 sendNotification(pushNotificationFcmModel, MainActivity.class);

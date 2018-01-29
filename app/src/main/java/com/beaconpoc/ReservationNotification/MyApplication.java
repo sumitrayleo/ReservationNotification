@@ -54,16 +54,16 @@ public class MyApplication extends Application {
 //        TimerTask task = new TimerTask() {
 //            @Override
 //            public void run() {
-                beaconNotificationsManager.retrieveDeviceId("98765342", "9860", "5678");
+               // beaconNotificationsManager.retrieveDeviceId("98765342", "9860", "5678");
 //            }
 //        };
 //        timer.schedule(task, 10000);
 
-        String uuidString = "b9407f30-f5f8-466e-aff9-25556b57fe6d:13531:47";
+        String uuidString = "b9407f30-f5f8-466e-aff9-25556b57fe6d:10345:19843";
 
         // TODO: This line of code has to be enabled if we want to test the app without the aid of a physical beacon
         beaconNotificationsManager.addNotification(
-                new BeaconID("B9407F30-F5F8-466E-AFF9-25556B57FE6D", 13531, 47),
+                new BeaconID("B9407F30-F5F8-466E-AFF9-25556B57FE6D", 10345, 19843),
                 "Hello Guest.",
                 "Goodbye Guest.");
         beaconNotificationsManager.startMonitoringAllBeacons(uuidString);

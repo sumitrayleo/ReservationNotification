@@ -1,27 +1,27 @@
 {
   "project_info": {
-    "project_number": "548668397481",
-    "firebase_url": "https://reservationnotification-379f5.firebaseio.com",
-    "project_id": "reservationnotification-379f5",
-    "storage_bucket": "reservationnotification-379f5.appspot.com"
+    "project_number": "450436414015",
+    "firebase_url": "https://reservation-notification-api.firebaseio.com",
+    "project_id": "reservation-notification-api",
+    "storage_bucket": "reservation-notification-api.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:548668397481:android:eff06810ac2807c8",
+        "mobilesdk_app_id": "1:450436414015:android:eff06810ac2807c8",
         "android_client_info": {
           "package_name": "com.beaconpoc.ReservationNotification"
         }
       },
       "oauth_client": [
         {
-          "client_id": "548668397481-cpuc73beetctuaut50hbgtk367aroiej.apps.googleusercontent.com",
+          "client_id": "450436414015-ttacti99mih5mqid7s70b7h6emhtmao7.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCeqZh4Ju0wRDOYD8wv-zU3Z6aCIxFjdes"
+          "current_key": "AIzaSyC310nOiLbkCMW-_rJweeVKa-PWw3dN3Bg"
         }
       ],
       "services": {
