@@ -38,18 +38,20 @@ public class OfferListFragment extends BaseFragment {
         promoList = new ArrayList<>();
         if(((MyApplication)getActivity().getApplication()).getPushNotificationFcmModel() != null) {
             PushNotificationFcmModel pushNotificationFcmModel = ((MyApplication) getActivity().getApplication()).getPushNotificationFcmModel();
-            List<RulesModel> rulesModels = pushNotificationFcmModel.getReservations().get(0).getPromoOffers().getRules();
-            for (int i = 0; i < rulesModels.size(); i++) {
-                OfferItem item = new OfferItem();
-                item.setTitle(rulesModels.get(i).getCategory()
-                        + " @"
-                        + rulesModels.get(i).getDiscount()
-                        + " "
-                        + rulesModels.get(i).getDiscountType()
-                        + " discount");
-                item.setDescription(rulesModels.get(i).getDescription());
-                item.setPromocode("Promo Code : " + rulesModels.get(i).getPromoCodeId());
-                promoList.add(item);
+            if (pushNotificationFcmModel.getReservations().get(0).getPromoOffers() != null) {
+                List<RulesModel> rulesModels = pushNotificationFcmModel.getReservations().get(0).getPromoOffers().getRules();
+                for (int i = 0; i < rulesModels.size(); i++) {
+                    OfferItem item = new OfferItem();
+                    item.setTitle(rulesModels.get(i).getCategory()
+                            + " @"
+                            + rulesModels.get(i).getDiscount()
+                            + " "
+                            + rulesModels.get(i).getDiscountType()
+                            + " discount");
+                    item.setDescription(rulesModels.get(i).getDescription());
+                    item.setPromocode("Promo Code : " + rulesModels.get(i).getPromoCodeId());
+                    promoList.add(item);
+                }
             }
         }
         adapter = new OfferListAdapter(getContext(), promoList);
