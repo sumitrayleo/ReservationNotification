@@ -41,7 +41,9 @@ public class POIActivity extends BaseActivity {
                 OfferItem item = new OfferItem();
                 item.setTitle(pointOfInterestModel.get(i).getName());
                 item.setDescription(pointOfInterestModel.get(i).getSpecialInstructions());
-                item.setPromocode("Loyalty Code : " + pointOfInterestModel.get(i).getPromoOffers().getLoyaltyCode());
+                if(pointOfInterestModel.get(i).getPromoOffers() != null) {
+                    item.setPromocode("Loyalty Code : " + pointOfInterestModel.get(i).getPromoOffers().getLoyaltyCode());
+                }
                 POIList.add(item);
             }
         }
